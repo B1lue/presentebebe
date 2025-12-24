@@ -234,13 +234,15 @@
   padding: 24px;
   box-shadow: var(--shadow-medium);
   overflow: hidden;
-  max-height: 120px;
-  transition: max-height 0.4s ease, padding 0.4s ease;
+  max-height: 200px;
+  transition: max-height 0.5s ease, padding 0.5s ease;
   animation: fadeInUp 1s ease-out 0.4s both;
+  position: relative;
 }
 
 .message-card.expanded {
-  max-height: 500px;
+  max-height: none;
+  overflow: visible;
 }
 
 .message-title {
@@ -253,9 +255,12 @@
 .message-text {
   font-size: 14px;
   color: var(--text-white);
-  line-height: 1.6;
+  line-height: 1.8;
   opacity: 0.95;
+  word-wrap: break-word;
   word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 /* Toggle Message Button */
@@ -1115,6 +1120,7 @@
 
   .message-card {
     padding: 28px;
+    max-height: 220px;
   }
 
   .wrapped-title {
@@ -1213,8 +1219,18 @@
     font-size: 20px;
   }
 
+  .message-card {
+    padding: 20px;
+    max-height: 180px;
+  }
+
+  .message-card.expanded {
+    padding: 24px;
+  }
+
   .message-text {
     font-size: 13px;
+    line-height: 1.7;
   }
 
   .player-controls {

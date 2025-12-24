@@ -97,11 +97,21 @@ function App() {
 
   // Autoplay de música ao carregar
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play().catch(() => {
-        // Fallback se autoplay não funcionar
-      });
-    }
+    const playAudio = async () => {
+      if (audioRef.current) {
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.log('Autoplay bloqueado, aguardando interação do usuário');
+          setIsPlaying(false);
+        }
+      }
+    };
+
+    // Tentar reproduzir após um pequeno delay
+    const timer = setTimeout(playAudio, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Sincronizar play/pause com áudio
@@ -409,7 +419,7 @@ function App() {
   return (
     <div className="app-container">
       {/* Audio Element */}
-      <audio ref={audioRef} autoPlay muted={false}>
+      <audio ref={audioRef} preload="auto" loop>
         <source src="/Billie Eilish.mp3" type="audio/mpeg" />
       </audio>
 
