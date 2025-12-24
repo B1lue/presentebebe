@@ -490,8 +490,10 @@ function App() {
             </button>
             <button className="control-btn" aria-label="Próximo" onClick={handleNext}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                <path d="M16 18h2V6h-2zm-11-7l8.5-6v12z"/>
+                <path d="M5 6l8.5 6L5 18z" />
+                <path d="M15.5 6h2v12h-2z" />
               </svg>
+
             </button>
           </div>
         </div>
