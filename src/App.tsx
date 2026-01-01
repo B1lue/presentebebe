@@ -11,7 +11,9 @@ function App() {
     minutes: 0,
     seconds: 0,
   });
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioReady, setAudioReady] = useState(false);
+  const [showPlayPrompt, setShowPlayPrompt] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -40,11 +42,12 @@ function App() {
   const getRelationshipStartDate = () => {
     const today = new Date();
     const currentYear = today.getFullYear();
+    // 2 de outubro = mês 9 (janeiro = 0)
     const relationshipDate = new Date(currentYear, 10, 2);
 
-    // Se a data já passou este ano, usa o ano anterior
-    if (relationshipDate > today) {
-      return new Date(currentYear - 1, 9, 2).getTime();
+    // Se a data ainda não chegou este ano, usa o ano anterior
+    if (today < relationshipDate) {
+      return new Date(currentYear - 1, 10, 2).getTime();
     }
     return relationshipDate.getTime();
   };
@@ -95,39 +98,44 @@ function App() {
     return () => clearInterval(timer);
   }, [relationshipStartDate]);
 
-  // Autoplay de música ao carregar
-  useEffect(() => {
-    const playAudio = async () => {
-      if (audioRef.current) {
-        try {
-          await audioRef.current.play();
-          setIsPlaying(true);
-        } catch (error) {
-          console.log('Autoplay bloqueado, aguardando interação do usuário');
-          setIsPlaying(false);
-        }
+  // Remover o useEffect de autoplay automático
+  // Novo: Iniciar áudio após interação do usuário
+  const handleInitialPlay = async () => {
+    if (audioRef.current) {
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+        setShowPlayPrompt(false);
+        setAudioReady(true);
+      } catch (error) {
+        console.error('Erro ao reproduzir áudio:', error);
       }
-    };
+    }
+  };
 
-    // Tentar reproduzir após um pequeno delay
-    const timer = setTimeout(playAudio, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  // Modificar o toggle de play/pause
+  const handlePlayPause = () => {
+    if (!audioReady) {
+      handleInitialPlay();
+    } else {
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   // Sincronizar play/pause com áudio
   useEffect(() => {
-    if (audioRef.current) {
+    if (audioRef.current && audioReady) {
       if (isPlaying) {
         audioRef.current.play().catch(() => {
-          // Erro ao reproduzir
+          console.error('Erro ao reproduzir');
         });
       } else {
         audioRef.current.pause();
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, audioReady]);
 
-  // Atualizar tz'
+  // Atualizar progresso do áudio
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -423,15 +431,30 @@ function App() {
         <source src="/Billie Eilish.mp3" type="audio/mpeg" />
       </audio>
 
+      {/* Play Prompt Overlay */}
+      {showPlayPrompt && (
+        <div className="play-prompt-overlay" onClick={handleInitialPlay}>
+          <div className="play-prompt-card">
+            <div className="play-prompt-icon">🎵</div>
+            <h2 className="play-prompt-title">Toque para ouvir nossa música</h2>
+            <button className="play-prompt-btn" onClick={handleInitialPlay}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="header">
         <h1 className="header-title">Nosso Pequeno Grande Universo</h1>
         <p className="header-subtitle">
-          {timeCounter.months === 1 && timeCounter.days <= 10
-            ? '2 Meses de Amor 💕'
-            : timeCounter.months === 0 && timeCounter.days < 2
-            ? 'Ainda estamos no começo 💕'
-            : `${timeCounter.months} Meses de Amor 💕`}
+          {timeCounter.years > 0
+            ? `${timeCounter.years} ${timeCounter.years === 1 ? 'Ano' : 'Anos'} e ${timeCounter.months} ${timeCounter.months === 1 ? 'Mês' : 'Meses'} de Amor 💕`
+            : timeCounter.months > 0
+            ? `${timeCounter.months} ${timeCounter.months === 1 ? 'Mês' : 'Meses'} de Amor 💕`
+            : 'Nosso Início 💕'}
         </p>
       </header>
 
@@ -474,7 +497,7 @@ function App() {
             </button>
             <button
               className="control-btn play-btn"
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={handlePlayPause}
               aria-label="Play/Pause"
             >
               {isPlaying ? (
