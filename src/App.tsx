@@ -59,7 +59,7 @@ function App() {
   const getRelationshipStartDate = () => {
     const today = new Date();
     const currentYear = today.getFullYear();
-    // 2 de outubro = mês 9 (janeiro = 0)
+    // 2 de outubro = mês 9
     const relationshipDate = new Date(currentYear, 10, 2);
 
     // Se a data ainda não chegou este ano, usa o ano anterior
