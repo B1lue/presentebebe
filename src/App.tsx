@@ -46,7 +46,6 @@ function App() {
   // Bucket List States
   const [bucketListTab, setBucketListTab] = useState(0);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
-  const [showFullBucketList, setShowFullBucketList] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [photoIndex, setPhotoIndex] = useState<{ [key: string]: number }>({});
   const bucketListRef = useRef<HTMLDivElement>(null);
@@ -114,43 +113,46 @@ function App() {
   const bucketListTabs = [
     {
       name: '💕 Nossas Aventuras',
+      icon: '💕',
       items: [
-        { id: 'praia', label: 'Ir a praia com meu bebê', photos: [] },
-        { id: 'casar', label: 'Casar com meu bebê', photos: [] },
-        { id: 'morrer', label: 'Morrer junto', photos: [] },
-        { id: 'figado', label: 'Fazer fígado pra ela', photos: [] },
-        { id: 'lanternas', label: 'Show de lanternas (China)', photos: [] },
-        { id: 'abatedouro', label: 'Ir para todos os locais do Abatedouro', photos: [] },
+        { id: 'praia', label: 'Ir a praia com meu bebê', emoji: '🏖️', photos: [] },
+        { id: 'casar', label: 'Casar com meu bebê', emoji: '💍', photos: [] },
+        { id: 'morrer', label: 'Morrer junto', emoji: '💑', photos: [] },
+        { id: 'figado', label: 'Fazer fígado pra ela', emoji: '👨‍🍳', photos: [] },
+        { id: 'lanternas', label: 'Show de lanternas (China)', emoji: '🏮', photos: [] },
+        { id: 'abatedouro', label: 'Ir para todos os locais do Abatedouro', emoji: '🎢', photos: [] },
       ]
     },
     {
       name: '🎬 Filmes para Assistir',
+      icon: '🎬',
       items: [
-        { id: 'narnia', label: 'Crônicas de Nárnia', photos: [] },
-        { id: 'pirataria', label: 'Piratas do Caribe', photos: [] },
-        { id: 'got', label: 'Game of Thrones', photos: [] },
-        { id: 'ghibli', label: 'Studio Ghibli', photos: [] },
+        { id: 'narnia', label: 'Crônicas de Nárnia', emoji: '🦁', photos: [] },
+        { id: 'pirataria', label: 'Piratas do Caribe', emoji: '⚓', photos: [] },
+        { id: 'got', label: 'Game of Thrones', emoji: '👑', photos: [] },
+        { id: 'ghibli', label: 'Studio Ghibli', emoji: '🎨', photos: [] },
       ]
     },
     {
       name: '✈️ Primeira Viagem Juntos',
+      icon: '✈️',
       items: [
-        { id: 'finlandia', label: 'Finlândia', photos: [] },
-        { id: 'havai', label: 'Havaí', photos: [] },
-        { id: 'italia', label: 'Itália - Sardenha (trem pra Suíça)', photos: [] },
-        { id: 'suica', label: 'Suíça', photos: [] },
-        { id: 'china', label: 'China', photos: [] },
-        { id: 'japao_main', label: 'Japão - Shanghai Yuyuan Garden Sepang', photos: [] },
-        { id: 'novazelandia', label: 'Nova Zelândia', photos: [] },
-        { id: 'albania', label: 'Albânia', photos: [] },
-        { id: 'croacia', label: 'Croácia', photos: [] },
-        { id: 'portugal', label: 'Portugal - Madeira', photos: [] },
-        { id: 'peru', label: 'Peru - Machu Picchu', photos: [] },
-        { id: 'repdom', label: 'República Dominicana - Santa Lúcia', photos: [] },
-        { id: 'franca', label: 'Planalto de Valensole - França', photos: [] },
-        { id: 'nagakute', label: 'Nagakute - Japão (Studio Ghibli)', photos: [] },
-        { id: 'turquia', label: 'Turquia - Capadócia', photos: [] },
-        { id: 'grecia', label: 'Grécia', photos: [] },
+        { id: 'finlandia', label: 'Finlândia', emoji: '❄️', photos: [] },
+        { id: 'havai', label: 'Havaí', emoji: '🌺', photos: [] },
+        { id: 'italia', label: 'Itália - Sardenha (trem pra Suíça)', emoji: '🇮🇹', photos: [] },
+        { id: 'suica', label: 'Suíça', emoji: '🏔️', photos: [] },
+        { id: 'china', label: 'China', emoji: '🏯', photos: [] },
+        { id: 'japao_main', label: 'Japão - Shanghai Yuyuan Garden Sepang', emoji: '🇯🇵', photos: [] },
+        { id: 'novazelandia', label: 'Nova Zelândia', emoji: '⛰️', photos: [] },
+        { id: 'albania', label: 'Albânia', emoji: '🏔️', photos: [] },
+        { id: 'croacia', label: 'Croácia', emoji: '🏖️', photos: [] },
+        { id: 'portugal', label: 'Portugal - Madeira', emoji: '🇵🇹', photos: [] },
+        { id: 'peru', label: 'Peru - Machu Picchu', emoji: '🗻', photos: [] },
+        { id: 'repdom', label: 'República Dominicana - Santa Lúcia', emoji: '🏝️', photos: [] },
+        { id: 'franca', label: 'Planalto de Valensole - França', emoji: '🇫🇷', photos: [] },
+        { id: 'nagakute', label: 'Nagakute - Japão (Studio Ghibli)', emoji: '🎭', photos: [] },
+        { id: 'turquia', label: 'Turquia - Capadócia', emoji: '🎈', photos: [] },
+        { id: 'grecia', label: 'Grécia', emoji: '🏛️', photos: [] },
       ]
     }
   ];
@@ -1146,122 +1148,106 @@ function App() {
             <p className="bucket-list-subtitle">Coisas incríveis que queremos fazer e lugares para visitar</p>
           </div>
 
-          <button
-            className="open-bucket-list-btn"
-            onClick={() => setShowFullBucketList(true)}
-          >
-            <span>📝 Ver Nossa Lista Completa</span>
-          </button>
-
-          <p className="bucket-list-hint">Clique no botão para ver todas as categorias e marcar seus desejos! ✨</p>
-        </div>
-
-        {/* Full Bucket List Modal */}
-        {showFullBucketList && (
-          <div className="bucket-list-modal-overlay" onClick={() => setShowFullBucketList(false)}>
-            <div className="bucket-list-modal" onClick={(e) => e.stopPropagation()}>
-              {/* Close Button */}
+          {/* Tabs */}
+          <div className="bucket-tabs">
+            {bucketListTabs.map((tab, index) => (
               <button
-                className="modal-close-btn"
-                onClick={() => setShowFullBucketList(false)}
+                key={index}
+                className={`bucket-tab ${bucketListTab === index ? 'active' : ''}`}
+                onClick={() => setBucketListTab(index)}
               >
-                ✕
+                <span className="tab-icon">{tab.icon}</span>
+                {tab.name}
               </button>
+            ))}
+          </div>
 
-              <div className="modal-header">
-                <h2 className="modal-title">💕 Nossa Lista de Desejos 💕</h2>
-              </div>
-
-              {/* Tabs */}
-              <div className="bucket-tabs">
-                {bucketListTabs.map((tab, index) => (
-                  <button
-                    key={index}
-                    className={`bucket-tab ${bucketListTab === index ? 'active' : ''}`}
-                    onClick={() => setBucketListTab(index)}
-                  >
-                    {tab.name}
-                  </button>
-                ))}
-              </div>
-
-              {/* Tab Content */}
-              <div className="bucket-list-content">
-                <div className="bucket-items-list">
-                  {bucketListTabs[bucketListTab].items.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className={`bucket-item-with-photos ${checkedItems[item.id] ? 'checked' : ''}`}
-                    >
-                      <div className="bucket-item-header">
-                        <input
-                          type="checkbox"
-                          id={item.id}
-                          checked={checkedItems[item.id] || false}
-                          onChange={() => handleCheckItem(item.id)}
-                          className="bucket-checkbox"
-                        />
-                        <label htmlFor={item.id} className="bucket-label">
-                          {item.label}
-                        </label>
-                        {item.photos && item.photos.length > 0 && (
-                          <button
-                            className="expand-photos-btn"
-                            onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                          >
-                            📸 {item.photos.length}
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Photos Carousel */}
-                      {expandedItem === item.id && item.photos && item.photos.length > 0 && (
-                        <div className="item-photos-carousel">
-                          <div className="carousel-wrapper">
-                            {item.photos.map((photo, photoIdx) => (
-                              <div
-                                key={photoIdx}
-                                className={`carousel-slide ${
-                                  (photoIndex[item.id] || 0) === photoIdx ? 'active' : ''
-                                }`}
-                              >
-                                <img src={photo} alt={`${item.label} ${photoIdx + 1}`} />
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="carousel-controls">
-                            <button
-                              className="carousel-btn"
-                              onClick={() => prevPhotoInBucket(item.id, item.photos)}
-                            >
-                              ◀
-                            </button>
-                            <span className="carousel-counter">
-                              {(photoIndex[item.id] || 0) + 1} / {item.photos.length}
-                            </span>
-                            <button
-                              className="carousel-btn"
-                              onClick={() => nextPhotoInBucket(item.id, item.photos)}
-                            >
-                              ▶
-                            </button>
-                          </div>
-                        </div>
-                      )}
+          {/* Tab Content - Full Page Style */}
+          <div className="bucket-list-full-content">
+            <div className="bucket-items-grid">
+              {bucketListTabs[bucketListTab].items.map((item) => (
+                <div
+                  key={item.id}
+                  className={`bucket-item-card ${checkedItems[item.id] ? 'checked' : ''}`}
+                >
+                  {/* Item Header */}
+                  <div className="item-header">
+                    <div className="item-checkbox-wrapper">
+                      <input
+                        type="checkbox"
+                        id={item.id}
+                        checked={checkedItems[item.id] || false}
+                        onChange={() => handleCheckItem(item.id)}
+                        className="bucket-checkbox-large"
+                      />
+                      <label htmlFor={item.id} className="bucket-label-large">
+                        {item.label}
+                      </label>
                     </div>
-                  ))}
-                </div>
+                    <div className="item-emoji">{item.emoji}</div>
+                  </div>
 
-                <p className="bucket-progress">
-                  Completados: {Object.values(checkedItems).filter(Boolean).length} / {
-                    bucketListTabs[bucketListTab].items.length
-                  }
-                </p>
+                  {/* Photos Section */}
+                  {item.photos && item.photos.length > 0 ? (
+                    <div className="item-carousel-section">
+                      <div className="item-carousel">
+                        <div className="carousel-photos">
+                          {item.photos.map((photo, photoIdx) => (
+                            <div
+                              key={photoIdx}
+                              className={`photo-slide ${
+                                (photoIndex[item.id] || 0) === photoIdx ? 'active' : ''
+                              }`}
+                            >
+                              <img src={photo} alt={`${item.label} ${photoIdx + 1}`} />
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="carousel-nav">
+                          <button
+                            className="nav-btn"
+                            onClick={() => prevPhotoInBucket(item.id, item.photos)}
+                          >
+                            ◀
+                          </button>
+                          <span className="photo-count">
+                            {(photoIndex[item.id] || 0) + 1}/{item.photos.length}
+                          </span>
+                          <button
+                            className="nav-btn"
+                            onClick={() => nextPhotoInBucket(item.id, item.photos)}
+                          >
+                            ▶
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="empty-photos">
+                      <p>📷 Nenhuma foto adicionada ainda</p>
+                      <small>Adicione fotos no código para ver o carrossel aqui</small>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Progress Footer */}
+            <div className="bucket-footer">
+              <div className="progress-info">
+                <span className="completed-count">
+                  ✅ {Object.values(checkedItems).filter(Boolean).length} de {bucketListTabs[bucketListTab].items.length} completados
+                </span>
               </div>
+              <p className="completion-message">
+                {Object.values(checkedItems).filter(Boolean).length === bucketListTabs[bucketListTab].items.length
+                  ? '🎉 Parabéns! Vocês completaram tudo nesta categoria!'
+                  : '💪 Continue marcando seus desejos!'}
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Playlist Interativa */}
         <div className="playlist-section">

@@ -1380,7 +1380,7 @@
 .bucket-list-section {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 32px;
   margin-top: 40px;
   padding: 32px 0;
   opacity: 0;
@@ -1392,7 +1392,7 @@
 }
 
 .bucket-list-title {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--text-white);
   margin-bottom: 8px;
@@ -1403,244 +1403,162 @@
 }
 
 .bucket-list-subtitle {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-gray);
   letter-spacing: 0.5px;
-}
-
-/* Open Bucket List Button */
-.open-bucket-list-btn {
-  background: linear-gradient(135deg, #d946a6, #a21caf);
-  border: none;
-  border-radius: var(--border-radius-large);
-  padding: 20px 32px;
-  font-size: 18px;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(217, 70, 166, 0.3);
-  margin: 0 auto;
-  display: block;
-}
-
-.open-bucket-list-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 35px rgba(217, 70, 166, 0.5);
-}
-
-.open-bucket-list-btn:active {
-  transform: translateY(-2px);
-}
-
-.bucket-list-hint {
-  text-align: center;
-  font-size: 14px;
-  color: var(--text-gray);
-  margin-top: 8px;
-}
-
-/* Full Bucket List Modal */
-.bucket-list-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(5px);
-  animation: fadeIn 0.3s ease-out;
-  padding: 20px;
-}
-
-.bucket-list-modal {
-  background: linear-gradient(135deg, #3d1f2d 0%, #2d1f2d 100%);
-  border-radius: var(--border-radius-large);
-  width: 100%;
-  max-width: 700px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(217, 70, 166, 0.2);
-  animation: scaleIn 0.3s ease-out;
-  position: relative;
-}
-
-.modal-close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: white;
-}
-
-.modal-close-btn:hover {
-  background: rgba(217, 70, 166, 0.3);
-  transform: rotate(90deg);
-}
-
-.modal-header {
-  text-align: center;
-}
-
-.modal-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-white);
 }
 
 /* Tabs */
 .bucket-tabs {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
+  margin: 24px 0;
 }
 
 .bucket-tab {
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(217, 70, 166, 0.2);
-  border-radius: var(--border-radius);
-  padding: 12px 16px;
-  font-size: 13px;
+  border-radius: var(--border-radius-large);
+  padding: 16px 24px;
+  font-size: 15px;
   color: var(--text-gray);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-icon {
+  font-size: 20px;
 }
 
 .bucket-tab:hover {
   border-color: rgba(217, 70, 166, 0.5);
   color: var(--text-white);
+  transform: translateY(-2px);
 }
 
 .bucket-tab.active {
   background: linear-gradient(135deg, #d946a6, #a21caf);
   border-color: transparent;
   color: white;
-  box-shadow: var(--shadow-light);
+  box-shadow: 0 8px 25px rgba(217, 70, 166, 0.3);
 }
 
-/* Bucket List Content */
-.bucket-list-content {
+/* Full Content Grid */
+.bucket-list-full-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.bucket-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.bucket-item-card {
+  background: linear-gradient(135deg, rgba(217, 70, 166, 0.12), rgba(162, 28, 175, 0.12));
+  border: 2px solid rgba(217, 70, 166, 0.3);
+  border-radius: var(--border-radius-large);
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
 }
 
-.bucket-items-list {
+.bucket-item-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 50px rgba(217, 70, 166, 0.3);
+  border-color: rgba(217, 70, 166, 0.6);
+}
+
+.bucket-item-card.checked {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.1));
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.item-header {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
+  justify-content: space-between;
 }
 
-.bucket-item-with-photos {
+.item-checkbox-wrapper {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
-  padding: 14px 16px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: var(--border-radius);
-  border: 1px solid rgba(217, 70, 166, 0.2);
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.4s ease-out;
-}
-
-.bucket-item-with-photos:hover {
-  background: rgba(0, 0, 0, 0.4);
-  border-color: rgba(217, 70, 166, 0.4);
-}
-
-.bucket-item-with-photos.checked {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.4);
-}
-
-.bucket-item-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.bucket-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: #d946a6;
-  flex-shrink: 0;
-}
-
-.bucket-label {
-  font-size: 15px;
-  color: var(--text-white);
-  cursor: pointer;
-  user-select: none;
-  transition: all 0.3s ease;
   flex: 1;
 }
 
-.bucket-item-with-photos.checked .bucket-label {
-  opacity: 0.7;
-  text-decoration: line-through;
-  color: #22c55e;
+.bucket-checkbox-large {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  cursor: pointer;
+  accent-color: #d946a6;
+  margin-top: 2px;
 }
 
-.expand-photos-btn {
-  background: rgba(217, 70, 166, 0.3);
-  border: 1px solid rgba(217, 70, 166, 0.5);
-  border-radius: var(--border-radius);
-  padding: 6px 12px;
-  font-size: 12px;
+.bucket-label-large {
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-white);
   cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  user-select: none;
+  line-height: 1.4;
 }
 
-.expand-photos-btn:hover {
-  background: rgba(217, 70, 166, 0.5);
+.bucket-item-card.checked .bucket-label-large {
+  color: #22c55e;
+  text-decoration: line-through;
+  opacity: 0.8;
 }
 
-/* Item Photos Carousel */
-.item-photos-carousel {
+.item-emoji {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+/* Carousel Section */
+.item-carousel-section {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 8px;
-  padding-top: 12px;
+  margin-top: 12px;
+  padding-top: 16px;
   border-top: 1px solid rgba(217, 70, 166, 0.2);
 }
 
-.carousel-wrapper {
+.item-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.carousel-photos {
   display: flex;
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   border-radius: var(--border-radius);
   overflow: hidden;
+  border: 1px solid rgba(217, 70, 166, 0.2);
 }
 
-.carousel-slide {
+.photo-slide {
   width: 100%;
   height: 100%;
   flex-shrink: 0;
@@ -1654,26 +1572,26 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.carousel-slide.active {
+.photo-slide.active {
   position: relative;
   opacity: 1;
 }
 
-.carousel-slide img {
+.photo-slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: var(--border-radius);
 }
 
-.carousel-controls {
+.carousel-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
 }
 
-.carousel-btn {
+.nav-btn {
   background: linear-gradient(135deg, #d946a6, #a21caf);
   border: none;
   border-radius: 50%;
@@ -1685,32 +1603,116 @@
   cursor: pointer;
   transition: all 0.2s ease;
   color: white;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
+  box-shadow: 0 4px 12px rgba(217, 70, 166, 0.3);
 }
 
-.carousel-btn:hover {
+.nav-btn:hover {
   transform: scale(1.1);
 }
 
-.carousel-btn:active {
+.nav-btn:active {
   transform: scale(0.95);
 }
 
-.carousel-counter {
+.photo-count {
   font-size: 12px;
   color: var(--text-gray);
-  min-width: 50px;
+  min-width: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.empty-photos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--border-radius);
+  border: 1px dashed rgba(217, 70, 166, 0.3);
   text-align: center;
 }
 
-.bucket-progress {
+.empty-photos p {
+  font-size: 16px;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+.empty-photos small {
+  font-size: 12px;
+  color: var(--text-gray);
+  opacity: 0.7;
+}
+
+/* Bucket Footer */
+.bucket-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(217, 70, 166, 0.1), rgba(162, 28, 175, 0.1));
+  border: 1px solid rgba(217, 70, 166, 0.3);
+  border-radius: var(--border-radius-large);
   text-align: center;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: center;
+}
+
+.completed-count {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #d946a6, #a21caf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.completion-message {
   font-size: 14px;
   color: var(--text-gray);
-  padding-top: 12px;
-  border-top: 1px solid rgba(217, 70, 166, 0.2);
-  font-weight: 600;
+  margin: 0;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .bucket-list-title {
+    font-size: 24px;
+  }
+
+  .bucket-tabs {
+    gap: 8px;
+  }
+
+  .bucket-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .tab-icon {
+    font-size: 18px;
+  }
+
+  .bucket-items-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .bucket-item-card {
+    padding: 16px;
+  }
+
+  .item-emoji {
+    font-size: 24px;
+  }
 }
 
 /* Playlist Section */
@@ -2156,25 +2158,11 @@
     font-size: 10px;
   }
 
-  /* Mobile Modal */
-  .bucket-list-modal {
-    max-height: 85vh;
-    max-width: 95vw;
-    padding: 24px;
-    gap: 16px;
+  .bucket-list-title {
+    font-size: 20px;
   }
 
-  .bucket-tab {
-    padding: 10px 12px;
-    font-size: 12px;
-  }
-
-  .bucket-item-with-photos {
-    padding: 12px 12px;
-  }
-
-  .expand-photos-btn {
-    padding: 4px 8px;
-    font-size: 11px;
+  .bucket-items-grid {
+    grid-template-columns: 1fr;
   }
 }
