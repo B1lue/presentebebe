@@ -37,6 +37,23 @@ function App() {
   const [liveMinutes, setLiveMinutes] = useState(0);
   const [liveSeconds, setLiveSeconds] = useState(0);
 
+  // Quiz States
+  const [currentQuizQuestion, setCurrentQuizQuestion] = useState(0);
+  const [quizAnswered, setQuizAnswered] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+
+  // Bucket List States
+  const [bucketListTab, setBucketListTab] = useState(0);
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+  const [showFullBucketList, setShowFullBucketList] = useState(false);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [photoIndex, setPhotoIndex] = useState<{ [key: string]: number }>({});
+  const bucketListRef = useRef<HTMLDivElement>(null);
+
+  // Playlist States
+  const [currentPlaylistTrack, setCurrentPlaylistTrack] = useState(0);
+
   // Data do início do relacionamento: 2 de Outubro
   // Detecta automaticamente o ano (ano atual ou ano anterior se a data já passou)
   const getRelationshipStartDate = () => {
@@ -62,6 +79,144 @@ function App() {
     '/foto3.png',
     '/foto5.jpg',
     '/foto6.jpg',
+  ];
+
+  // Quiz de Casal
+  const quizQuestions = [
+    {
+      question: 'Qual é meu maior sonho?',
+      options: ['Viajar o mundo', 'Estar com você', 'Ter paz', 'Todas as acima'],
+      correct: 3,
+    },
+    {
+      question: 'Qual é minha comida favorita?',
+      options: ['Pizza', 'Sushi', 'Hamburguer', 'Ainda não descobriu 😄'],
+      correct: 1,
+    },
+    {
+      question: 'Qual foi nosso primeiro encontro?',
+      options: ['No parque', 'Na praia', 'Online/Redes sociais', 'Na faculdade'],
+      correct: 2,
+    },
+    {
+      question: 'O que mais gosto em você?',
+      options: ['Seu sorriso', 'Sua personalidade', 'Seu carinho', 'Tudo 💕'],
+      correct: 3,
+    },
+    {
+      question: 'Qual é meu hobby favorito?',
+      options: ['Ler', 'Desenhar', 'Cozinhar', 'Estar com você'],
+      correct: 3,
+    },
+  ];
+
+  // Bucket List - Coisas que queremos fazer juntos
+  const bucketListTabs = [
+    {
+      name: '💕 Nossas Aventuras',
+      items: [
+        { id: 'praia', label: 'Ir a praia com meu bebê', photos: [] },
+        { id: 'casar', label: 'Casar com meu bebê', photos: [] },
+        { id: 'morrer', label: 'Morrer junto', photos: [] },
+        { id: 'figado', label: 'Fazer fígado pra ela', photos: [] },
+        { id: 'lanternas', label: 'Show de lanternas (China)', photos: [] },
+        { id: 'abatedouro', label: 'Ir para todos os locais do Abatedouro', photos: [] },
+      ]
+    },
+    {
+      name: '🎬 Filmes para Assistir',
+      items: [
+        { id: 'narnia', label: 'Crônicas de Nárnia', photos: [] },
+        { id: 'pirataria', label: 'Piratas do Caribe', photos: [] },
+        { id: 'got', label: 'Game of Thrones', photos: [] },
+        { id: 'ghibli', label: 'Studio Ghibli', photos: [] },
+      ]
+    },
+    {
+      name: '✈️ Primeira Viagem Juntos',
+      items: [
+        { id: 'finlandia', label: 'Finlândia', photos: [] },
+        { id: 'havai', label: 'Havaí', photos: [] },
+        { id: 'italia', label: 'Itália - Sardenha (trem pra Suíça)', photos: [] },
+        { id: 'suica', label: 'Suíça', photos: [] },
+        { id: 'china', label: 'China', photos: [] },
+        { id: 'japao_main', label: 'Japão - Shanghai Yuyuan Garden Sepang', photos: [] },
+        { id: 'novazelandia', label: 'Nova Zelândia', photos: [] },
+        { id: 'albania', label: 'Albânia', photos: [] },
+        { id: 'croacia', label: 'Croácia', photos: [] },
+        { id: 'portugal', label: 'Portugal - Madeira', photos: [] },
+        { id: 'peru', label: 'Peru - Machu Picchu', photos: [] },
+        { id: 'repdom', label: 'República Dominicana - Santa Lúcia', photos: [] },
+        { id: 'franca', label: 'Planalto de Valensole - França', photos: [] },
+        { id: 'nagakute', label: 'Nagakute - Japão (Studio Ghibli)', photos: [] },
+        { id: 'turquia', label: 'Turquia - Capadócia', photos: [] },
+        { id: 'grecia', label: 'Grécia', photos: [] },
+      ]
+    }
+  ];
+
+  const handleCheckItem = (itemId: string) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  // Photo Navigation for Bucket List
+  const goToPhotoInBucket = (itemId: string, index: number, photos: string[]) => {
+    setPhotoIndex(prev => ({
+      ...prev,
+      [itemId]: (index + photos.length) % photos.length
+    }));
+  };
+
+  const nextPhotoInBucket = (itemId: string, photos: string[]) => {
+    const currentIndex = photoIndex[itemId] || 0;
+    goToPhotoInBucket(itemId, currentIndex + 1, photos);
+  };
+
+  const prevPhotoInBucket = (itemId: string, photos: string[]) => {
+    const currentIndex = photoIndex[itemId] || 0;
+    goToPhotoInBucket(itemId, currentIndex - 1, photos);
+  };
+
+  // Playlist - Músicas que marcaram
+  const playlist = [
+    {
+      icon: '🎵',
+      title: 'I Love You',
+      artist: 'Billie Eilish',
+      description: 'Nossa música especial 💕',
+      emoji: '💜',
+    },
+    {
+      icon: '🎵',
+      title: 'Something Just Like This',
+      artist: 'Coldplay & The Chainsmokers',
+      description: 'Perfeita pra gente',
+      emoji: '✨',
+    },
+    {
+      icon: '🎵',
+      title: 'Make It Right',
+      artist: 'BTS',
+      description: 'Que nos faz lembrar',
+      emoji: '💫',
+    },
+    {
+      icon: '🎵',
+      title: 'Story of Us',
+      artist: 'Taylor Swift',
+      description: 'A nossa história',
+      emoji: '📖',
+    },
+    {
+      icon: '🎵',
+      title: 'Perfect',
+      artist: 'Ed Sheeran',
+      description: 'Você é perfeita pra mim',
+      emoji: '💕',
+    },
   ];
 
   //
@@ -259,13 +414,14 @@ function App() {
       { threshold: 0.2 }
     );
 
-    if (wrappedRef.current) {
-      observer.observe(wrappedRef.current);
+    const currentRef = wrappedRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (wrappedRef.current) {
-        observer.unobserve(wrappedRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -309,13 +465,39 @@ function App() {
       { threshold: 0.3 }
     );
 
-    if (storyRef.current) {
-      observer.observe(storyRef.current);
+    const currentRef = storyRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (storyRef.current) {
-        observer.unobserve(storyRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
+  // Intersection Observer para Bucket List
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // bucketListVisible removed - not needed
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const currentRef = bucketListRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
@@ -372,6 +554,42 @@ function App() {
     } else if (isRightSwipe) {
       prevSlide();
     }
+  };
+
+  // Quiz Handler
+  const handleQuizAnswer = (answerIndex: number) => {
+    if (quizAnswered) return;
+
+    setSelectedAnswer(answerIndex);
+    setQuizAnswered(true);
+
+    if (answerIndex === quizQuestions[currentQuizQuestion].correct) {
+      setQuizScore(quizScore + 1);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuizQuestion < quizQuestions.length - 1) {
+      setCurrentQuizQuestion(currentQuizQuestion + 1);
+      setQuizAnswered(false);
+      setSelectedAnswer(null);
+    }
+  };
+
+  const handleRestartQuiz = () => {
+    setCurrentQuizQuestion(0);
+    setQuizAnswered(false);
+    setQuizScore(0);
+    setSelectedAnswer(null);
+  };
+
+  // Playlist Navigation
+  const nextTrack = () => {
+    setCurrentPlaylistTrack((prev) => (prev + 1) % playlist.length);
+  };
+
+  const prevTrack = () => {
+    setCurrentPlaylistTrack((prev) => (prev - 1 + playlist.length) % playlist.length);
   };
 
   // Slides do Wrapped Story
@@ -524,7 +742,7 @@ function App() {
         {/* Couple Identification */}
         <div className="couple-info">
           <h2 className="couple-name">Junior e Julia</h2>
-          <p className="couple-date">Juntos desde 2 de Outubro de 2024</p>
+          <p className="couple-date">Juntos desde 2 de Outubro de {new Date(relationshipStartDate).getFullYear()}</p>
         </div>
 
         {/* Time Counter */}
@@ -720,6 +938,118 @@ function App() {
           </div>
         </div>
 
+        {/* Official Dating Section */}
+        <div className="engagement-section">
+          <div className="engagement-header">
+            <h2 className="engagement-title">💕 Oficialmente Nossos 💕</h2>
+            <p className="engagement-subtitle">2 de Abril de 2026</p>
+          </div>
+
+          <div className="engagement-content">
+            <div className="engagement-card">
+              <div className="engagement-icon">💜</div>
+              <p className="engagement-text">
+                O dia em que você disse sim e a gente oficializou esse namoro foi o dia em que tudo ficou ainda mais bonito.
+                Esse momento será para sempre um dos mais especiais da nossa história.
+              </p>
+              <div className="engagement-stats">
+                <div className="engagement-stat">
+                  <span className="stat-value">
+                    {(() => {
+                      const officialDate = new Date(2026, 3, 2).getTime();
+                      const now = new Date().getTime();
+                      const difference = now - officialDate;
+                      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                      return days;
+                    })()}
+                  </span>
+                  <span className="stat-name">Dias de Namoro Oficial</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quiz de Casal */}
+        <div className="quiz-section">
+          <div className="quiz-header">
+            <h2 className="quiz-title">🎯 Quanto Você Me Conhece? 🎯</h2>
+            <p className="quiz-subtitle">Teste seus conhecimentos sobre mim!</p>
+          </div>
+
+          {currentQuizQuestion < quizQuestions.length ? (
+            <div className="quiz-container">
+              <div className="quiz-progress">
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width: `${((currentQuizQuestion + 1) / quizQuestions.length) * 100}%`
+                    }}
+                  ></div>
+                </div>
+                <p className="progress-text">{currentQuizQuestion + 1} de {quizQuestions.length}</p>
+              </div>
+
+              <div className="quiz-card">
+                <h3 className="quiz-question">{quizQuestions[currentQuizQuestion].question}</h3>
+
+                <div className="quiz-options">
+                  {quizQuestions[currentQuizQuestion].options.map((option, index) => (
+                    <button
+                      key={index}
+                      className={`quiz-option ${
+                        selectedAnswer === index
+                          ? index === quizQuestions[currentQuizQuestion].correct
+                            ? 'correct'
+                            : 'wrong'
+                          : ''
+                      } ${quizAnswered ? 'disabled' : ''}`}
+                      onClick={() => handleQuizAnswer(index)}
+                      disabled={quizAnswered}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+
+                {quizAnswered && (
+                  <div className="quiz-feedback">
+                    {selectedAnswer === quizQuestions[currentQuizQuestion].correct ? (
+                      <p className="feedback-correct">✅ Acertou! 🎉</p>
+                    ) : (
+                      <p className="feedback-wrong">❌ Errou! Mas tudo bem, vai acertar na próxima 💕</p>
+                    )}
+                  </div>
+                )}
+
+                {quizAnswered && currentQuizQuestion < quizQuestions.length - 1 && (
+                  <button className="quiz-next-btn" onClick={handleNextQuestion}>
+                    Próxima Pergunta
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="quiz-results">
+              <div className="results-card">
+                <div className="results-icon">🏆</div>
+                <h3 className="results-title">Você acertou {quizScore} de {quizQuestions.length}!</h3>
+                <p className="results-message">
+                  {quizScore === quizQuestions.length
+                    ? 'Perfeito! Você me conhece muito bem! 💯'
+                    : quizScore >= 3
+                    ? 'Muito bom! Você me conhece bem! 😊'
+                    : 'Que tal a gente conviver mais um pouquinho? 😄'}
+                </p>
+                <button className="quiz-restart-btn" onClick={handleRestartQuiz}>
+                  Tentar Novamente
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Story Wrapped Section */}
         <div className="story-wrapped-section" ref={storyRef}>
           <div className="story-header">
@@ -807,6 +1137,177 @@ function App() {
               {currentSlide + 1} / {wrappedStories.length}
             </p>
           </div>
+        </div>
+
+        {/* Bucket List - Coisas que queremos fazer juntos */}
+        <div className="bucket-list-section" ref={bucketListRef}>
+          <div className="bucket-list-header">
+            <h2 className="bucket-list-title">💕 Nossa Lista de Desejos 💕</h2>
+            <p className="bucket-list-subtitle">Coisas incríveis que queremos fazer e lugares para visitar</p>
+          </div>
+
+          <button
+            className="open-bucket-list-btn"
+            onClick={() => setShowFullBucketList(true)}
+          >
+            <span>📝 Ver Nossa Lista Completa</span>
+          </button>
+
+          <p className="bucket-list-hint">Clique no botão para ver todas as categorias e marcar seus desejos! ✨</p>
+        </div>
+
+        {/* Full Bucket List Modal */}
+        {showFullBucketList && (
+          <div className="bucket-list-modal-overlay" onClick={() => setShowFullBucketList(false)}>
+            <div className="bucket-list-modal" onClick={(e) => e.stopPropagation()}>
+              {/* Close Button */}
+              <button
+                className="modal-close-btn"
+                onClick={() => setShowFullBucketList(false)}
+              >
+                ✕
+              </button>
+
+              <div className="modal-header">
+                <h2 className="modal-title">💕 Nossa Lista de Desejos 💕</h2>
+              </div>
+
+              {/* Tabs */}
+              <div className="bucket-tabs">
+                {bucketListTabs.map((tab, index) => (
+                  <button
+                    key={index}
+                    className={`bucket-tab ${bucketListTab === index ? 'active' : ''}`}
+                    onClick={() => setBucketListTab(index)}
+                  >
+                    {tab.name}
+                  </button>
+                ))}
+              </div>
+
+              {/* Tab Content */}
+              <div className="bucket-list-content">
+                <div className="bucket-items-list">
+                  {bucketListTabs[bucketListTab].items.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className={`bucket-item-with-photos ${checkedItems[item.id] ? 'checked' : ''}`}
+                    >
+                      <div className="bucket-item-header">
+                        <input
+                          type="checkbox"
+                          id={item.id}
+                          checked={checkedItems[item.id] || false}
+                          onChange={() => handleCheckItem(item.id)}
+                          className="bucket-checkbox"
+                        />
+                        <label htmlFor={item.id} className="bucket-label">
+                          {item.label}
+                        </label>
+                        {item.photos && item.photos.length > 0 && (
+                          <button
+                            className="expand-photos-btn"
+                            onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
+                          >
+                            📸 {item.photos.length}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Photos Carousel */}
+                      {expandedItem === item.id && item.photos && item.photos.length > 0 && (
+                        <div className="item-photos-carousel">
+                          <div className="carousel-wrapper">
+                            {item.photos.map((photo, photoIdx) => (
+                              <div
+                                key={photoIdx}
+                                className={`carousel-slide ${
+                                  (photoIndex[item.id] || 0) === photoIdx ? 'active' : ''
+                                }`}
+                              >
+                                <img src={photo} alt={`${item.label} ${photoIdx + 1}`} />
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="carousel-controls">
+                            <button
+                              className="carousel-btn"
+                              onClick={() => prevPhotoInBucket(item.id, item.photos)}
+                            >
+                              ◀
+                            </button>
+                            <span className="carousel-counter">
+                              {(photoIndex[item.id] || 0) + 1} / {item.photos.length}
+                            </span>
+                            <button
+                              className="carousel-btn"
+                              onClick={() => nextPhotoInBucket(item.id, item.photos)}
+                            >
+                              ▶
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <p className="bucket-progress">
+                  Completados: {Object.values(checkedItems).filter(Boolean).length} / {
+                    bucketListTabs[bucketListTab].items.length
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Playlist Interativa */}
+        <div className="playlist-section">
+          <div className="playlist-header">
+            <h2 className="playlist-title">🎵 Nossas Músicas 🎵</h2>
+            <p className="playlist-subtitle">Trilha sonora do nosso amor</p>
+          </div>
+
+          <div className="playlist-container">
+            <div className="playlist-card">
+              <div className="playlist-emoji">{playlist[currentPlaylistTrack].emoji}</div>
+              <h3 className="playlist-track-title">{playlist[currentPlaylistTrack].title}</h3>
+              <p className="playlist-artist">{playlist[currentPlaylistTrack].artist}</p>
+              <p className="playlist-description">{playlist[currentPlaylistTrack].description}</p>
+
+              <div className="playlist-controls">
+                <button className="playlist-btn" onClick={prevTrack}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                  </svg>
+                </button>
+                <span className="playlist-counter">
+                  {currentPlaylistTrack + 1} / {playlist.length}
+                </span>
+                <button className="playlist-btn" onClick={nextTrack}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="playlist-dots">
+                {playlist.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`dot ${index === currentPlaylistTrack ? 'active' : ''}`}
+                    onClick={() => setCurrentPlaylistTrack(index)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <p className="playlist-footer">
+            Todas essas músicas fazem parte da nossa história 💕
+          </p>
         </div>
 
         {/* Mapa Emocional */}
